@@ -1,73 +1,87 @@
-# from django.shortcuts import render
-
-# # Create your views here.
-
-
-# # payments/views.py
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from .models import Payment
-# import uuid
-
-# class InitiatePaymentView(APIView):
-#     def post(self, request):
-#         user = request.user
-#         amount = request.data.get('amount')
-
-#         reference = str(uuid.uuid4())
-
-#         payment = Payment.objects.create(
-#             user=user,
-#             amount=amount,
-#             reference=reference,
-#             status='pending'
-#         )
-
-#         return Response({
-#             "message": "Payment initiated",
-#             "reference": reference,
-#             "amount": amount
-#         }, status=status.HTTP_201_CREATED)
-
-
-
+# payments/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from .models import Payment
-import uuid
+from .serializers import PaymentSerializer
+
 
 class InitiatePaymentView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
-
-        amount = request.data.get('amount')
-        if not amount:
-            return Response({"error": "Amount is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            amount = int(amount)
-            if amount <= 0:
-                raise ValueError("Amount must be greater than zero")
-        except ValueError:
-            return Response({"error": "Amount must be a positive integer"}, status=status.HTTP_400_BAD_REQUEST)
-
-        reference = str(uuid.uuid4())
-
-        payment = Payment.objects.create(
-            user=user,
-            amount=amount,  # store in Kobo for Paystack
-            reference=reference,
-            status='pending'
-        )
-
+        serializer = PaymentSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        payment = serializer.save()
         return Response({
             "message": "Payment initiated",
-            "reference": reference,
-            "amount": amount
+            "payment": serializer.data
         }, status=status.HTTP_201_CREATED)
 
+
+class PaymentListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        payments = Payment.objects.filter(user=request.user).order_by("-created_at")
+        serializer = PaymentSerializer(payments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PaymentDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, reference):
+        try:
+            payment = Payment.objects.get(reference=reference, user=request.user)
+        except Payment.DoesNotExist:
+            return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PaymentSerializer(payment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class VerifyPaymentView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        # This endpoint can be used for manual verification
+        reference = request.data.get("reference")
+        if not reference:
+            return Response({"error": "Reference is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            payment = Payment.objects.get(reference=reference, user=request.user)
+        except Payment.DoesNotExist:
+            return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Example: mark as completed (replace with real gateway check)
+        payment.status = "completed"
+        payment.save()
+
+        serializer = PaymentSerializer(payment)
+        return Response({"message": "Payment verified", "payment": serializer.data}, status=status.HTTP_200_OK)
+
+
+class PaymentWebhookView(APIView):
+    permission_classes = [permissions.AllowAny]  # Payment gateways call this
+
+    def post(self, request):
+        # Handle webhook data from the payment provider
+        data = request.data
+        reference = data.get("reference")
+        status_str = data.get("status")
+
+        if not reference or not status_str:
+            return Response({"error": "Invalid webhook data"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            payment = Payment.objects.get(reference=reference)
+        except Payment.DoesNotExist:
+            return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update payment status based on gateway
+        payment.status = status_str
+        payment.save()
+
+        return Response({"message": "Webhook processed"}, status=status.HTTP_200_OK)
