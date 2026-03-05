@@ -10,6 +10,16 @@ SECRET_KEY = 'django-insecure-v!t@hv#ko1_t3jyq&b33-$@15%b)c&r$ukmj+jkzd-_ur346)z
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+
+# Paystack credentials
+PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+
+
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -9,6 +9,7 @@ from .views import (
     CartCreateView,
     CartDeleteView,
     EnquiryCreateView,
+    OrderCreateView,  # ✅ Added
 )
 
 urlpatterns = [
@@ -21,8 +22,10 @@ urlpatterns = [
     # Products
     # ----------------------------
     path('products/', ProductListView.as_view(), name='product-list'),
-    path('products/<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
     path('products/create/', ProductCreateView.as_view(), name='product-create'),
+    path('products/<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
+    # path('products/<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
+    # path('products/create/', ProductCreateView.as_view(), name='product-create'),
 
     # ----------------------------
     # Reviews
@@ -40,4 +43,7 @@ urlpatterns = [
     # Enquiries
     # ----------------------------
     path('enquiries/create/', EnquiryCreateView.as_view(), name='enquiry-create'),
+
+       # ... other API paths
+    path("orders/", OrderCreateView.as_view(), name="order-create"),
 ]

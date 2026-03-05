@@ -10,12 +10,21 @@ class InitiatePaymentView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        """
+        Create a new Payment instance and return details including
+        amount in kobo (for Paystack).
+        """
         serializer = PaymentSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         payment = serializer.save()
+
+        # Convert amount to kobo for Paystack
+        amount_in_kobo = int(payment.amount * 100)
+
         return Response({
             "message": "Payment initiated",
-            "payment": serializer.data
+            "payment": serializer.data,
+            "amount_kobo": amount_in_kobo
         }, status=status.HTTP_201_CREATED)
 
 
@@ -45,7 +54,9 @@ class VerifyPaymentView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        # This endpoint can be used for manual verification
+        """
+        Manually verify a payment using its reference.
+        """
         reference = request.data.get("reference")
         if not reference:
             return Response({"error": "Reference is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -55,8 +66,8 @@ class VerifyPaymentView(APIView):
         except Payment.DoesNotExist:
             return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Example: mark as completed (replace with real gateway check)
-        payment.status = "completed"
+        # In production, you would call Paystack's API here to confirm payment
+        payment.status = "successful"  # simulate success
         payment.save()
 
         serializer = PaymentSerializer(payment)
@@ -64,10 +75,13 @@ class VerifyPaymentView(APIView):
 
 
 class PaymentWebhookView(APIView):
-    permission_classes = [permissions.AllowAny]  # Payment gateways call this
+    permission_classes = [permissions.AllowAny]  # Called by payment gateways
 
     def post(self, request):
-        # Handle webhook data from the payment provider
+        """
+        Receive webhook events from Paystack or another provider.
+        Update payment status based on incoming data.
+        """
         data = request.data
         reference = data.get("reference")
         status_str = data.get("status")
@@ -80,8 +94,13 @@ class PaymentWebhookView(APIView):
         except Payment.DoesNotExist:
             return Response({"error": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Update payment status based on gateway
-        payment.status = status_str
-        payment.save()
+        # Map gateway status to our model's status
+        if status_str.lower() in ["success", "successful", "completed"]:
+            payment.status = "successful"
+        elif status_str.lower() in ["failed", "error"]:
+            payment.status = "failed"
+        else:
+            payment.status = "pending"
 
+        payment.save()
         return Response({"message": "Webhook processed"}, status=status.HTTP_200_OK)

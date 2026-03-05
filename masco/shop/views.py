@@ -5,6 +5,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from .models import Order, Cart
+from .serializers import OrderSerializer
+
 
 from .models import (
     Category,
@@ -12,6 +15,7 @@ from .models import (
     Review,
     Cart,
     Enquiry,
+    Order,   # ✅ Added
 )
 
 from .serializers import (
@@ -21,6 +25,7 @@ from .serializers import (
     ReviewSerializer,
     CartSerializer,
     EnquirySerializer,
+    OrderSerializer,  # ✅ Added
 )
 
 
@@ -156,3 +161,57 @@ class EnquiryCreateView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+
+#     # ============================
+# # Orders
+# # ============================
+# class OrderCreateView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def post(self, request):
+#         serializer = OrderSerializer(
+#             data=request.data,
+#             context={"request": request}
+#         )
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(
+#                 serializer.data,
+#                 status=status.HTTP_201_CREATED
+#             )
+
+#         return Response(
+#             serializer.errors,
+#             status=status.HTTP_400_BAD_REQUEST
+#         )
+
+
+
+
+
+
+
+class OrderCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = OrderSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            # <-- Print errors to console/log
+            print("Order creation failed:", serializer.errors)
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )

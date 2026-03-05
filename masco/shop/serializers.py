@@ -6,6 +6,7 @@ from .models import (
     Review,
     Enquiry,
     Cart,
+    Order,   # ✅ Added
 )
 
 
@@ -123,4 +124,56 @@ class EnquirySerializer(serializers.ModelSerializer):
             'message',
             'created_at',
         ]
+
+# # ----------------------------
+# # Orders
+# # ----------------------------
+# class OrderSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Order
+#         fields = "__all__"
+#         read_only_fields = ['user', 'status', 'created_at']
+
+#     def create(self, validated_data):
+#         validated_data['user'] = self.context['request'].user
+#         return super().create(validated_data)
+
+# from .models import Order
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id', 'full_name', 'email', 'phone', 'billing_address',
+                  'shipping_address', 'total_amount']
+        read_only_fields = ['id', 'status', 'created_at', 'user']
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
