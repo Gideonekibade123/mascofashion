@@ -101,8 +101,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@example.com"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# DEFAULT_FROM_EMAIL = "noreply@example.com"
 
 
 
@@ -114,7 +114,7 @@ EMAIL_HOST_USER = 'gekibade@gmail.com'
 EMAIL_HOST_PASSWORD = 'qtdxoikqlwlphnkq'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'noreply@example.com',
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
 
 # Frontend URL
 FRONTEND_URL = 'http://localhost:5173'
