@@ -8,35 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-v!t@hv#ko1_t3jyq&b33-$@15%b)c&r$ukmj+jkzd-_ur346)z'
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['mascofashion.onrender.com',]
 
 
 # Paystack credentials
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-
-
-
-
-# # Application definition
-# INSTALLED_APPS = [
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-
-#     'rest_framework',
-#     'rest_framework.authtoken',
-#     'corsheaders',
-#     'masco.payments', 
-#     'masco.users',
-#     'masco.shop',
-#     'django_rest_passwordreset',
-
 
 
 
@@ -146,7 +124,7 @@ DEFAULT_FROM_EMAIL = 'noreply@example.com'
 FRONTEND_URL = 'http://localhost:5173'
 
 # CORS
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = ["https://reacte-commerceproject.netlify.app", "http://localhost:5173"]
 CORS_ALLOW_ALL_ORIGINS = True  # only for development
 
 # DRF & JWT
