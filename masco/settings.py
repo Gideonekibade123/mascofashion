@@ -20,7 +20,28 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 
-# Application definition
+# # Application definition
+# INSTALLED_APPS = [
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+
+#     'rest_framework',
+#     'rest_framework.authtoken',
+#     'corsheaders',
+#     'masco.payments', 
+#     'masco.users',
+#     'masco.shop',
+#     'django_rest_passwordreset',
+
+
+
+
+
+    # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,13 +50,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third-party apps
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'payments', 
-    'users',
-    'shop',
     'django_rest_passwordreset',
+
+    # Your apps
+    'masco.payments', 
+    'masco.users',
+    'masco.shop',
 ]
 
 # Use your custom user model
