@@ -121,11 +121,13 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'noreply@example.com'
 
 # Frontend URL
-FRONTEND_URL = 'http://localhost:5173'
+FRONTEND_URL = 'https://reacte-commerceproject.netlify.app/'
 
 # CORS
-CORS_ALLOWED_ORIGINS = ["https://reacte-commerceproject.netlify.app", "http://localhost:5173"]
-CORS_ALLOW_ALL_ORIGINS = True  # only for development
+CORS_ALLOWED_ORIGINS = ["https://reacte-commerceproject.netlify.app",]
+CORS_ALLOW_ALL_ORIGINS = False  # only for development
+
+# "http://localhost:5173"
 
 # DRF & JWT
 REST_FRAMEWORK = {
