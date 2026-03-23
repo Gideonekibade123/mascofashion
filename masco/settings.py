@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-v!t@hv#ko1_t3jyq&b33-$@15%b)c&r$ukmj+jkzd-_ur346)z'
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['mascofashion.onrender.com',]
 
 
