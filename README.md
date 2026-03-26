@@ -8,28 +8,31 @@ This is the backend of the MASCO Fashion E-commerce application built with Djang
 
 ## 🚀 Features
 
-- User authentication with JWT
-- Product management (list, detail)
-- Cart and order system
-- Payment integration (Paystack)
-- Admin dashboard support
-- RESTful API endpoints
+- User authentication with JWT  
+- Product management (list, detail)  
+- Cart and order system  
+- Payment integration (Paystack)  
+- Admin dashboard support  
+- RESTful API endpoints  
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Python
-- Django
-- Django REST Framework
-- SQLite / PostgreSQL
-- Paystack API
+- Python  
+- Django  
+- Django REST Framework  
+- SQLite / PostgreSQL  
+- Paystack API  
 
-```
+---
+
 ## 📸 Admin Panel
 
 ![Admin Upload Page](whereadmincanuploadproducts.jpeg)  
 ![Upload Images Page](wheretouploadimagesofproducts.jpeg)  
+
+---
 
 ## 📸 Product Upload Flow
 
@@ -43,10 +46,8 @@ This is the backend of the MASCO Fashion E-commerce application built with Djang
 ## ⚙️ Installation Guide
 
 ### Clone the repository
-
 ```bash
 git clone https://github.com/Gideonekibade123/mascofashion
-
 cd mascofashion
 Create virtual environment (optional but recommended)
 python -m venv venv
@@ -55,7 +56,6 @@ Install dependencies
 pip install -r requirements.txt
 Run migrations
 python manage.py migrate
-
 Start the server
 python manage.py runserver
 🔗 API Base URL
@@ -67,9 +67,10 @@ manage.py → Django entry point
 🔐 Authentication
 Uses JWT (JSON Web Tokens)
 Login to receive access token
-Include token in headers:
-Authorization: Bearer <your_token>
 
+Include token in headers:
+
+Authorization: Bearer <your_token>
 💳 Payment Integration
 Integrated with Paystack for secure payments
 ⚠️ Note
