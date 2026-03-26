@@ -25,6 +25,19 @@ This is the backend of the MASCO Fashion E-commerce application built with Djang
 - SQLite / PostgreSQL
 - Paystack API
 
+```
+## 📸 Admin Panel
+
+![Admin Upload Page](whereadmincanuploadproducts.jpeg)  
+![Upload Images Page](wheretouploadimagesofproducts.jpeg)  
+
+## 📸 Product Upload Flow
+
+![Upload Products Images](touploadproductsimages.jpeg)  
+![Uploaded Product](uploadedproduct.jpeg)  
+![Uploaded Products Images 2](uploadedproductsimages2.jpeg)  
+![Uploaded Products Images 3](uploadedproductsimages3.jpeg)  
+
 ---
 
 ## ⚙️ Installation Guide
