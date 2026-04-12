@@ -2,11 +2,19 @@ from pathlib import Path
 import os
 from datetime import timedelta
 
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file  
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-v!t@hv#ko1_t3jyq&b33-$@15%b)c&r$ukmj+jkzd-_ur346)z'
+# SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
 DEBUG = False
 ALLOWED_HOSTS = ['mascofashion.onrender.com',]
 
@@ -75,11 +83,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'masco.wsgi.application'
 
 # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600
+    )
 }
 
 # Password validation
@@ -115,13 +132,15 @@ MEDIA_ROOT = BASE_DIR / "media"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'gekibade@gmail.com'
-EMAIL_HOST_PASSWORD = 'qtdxoikqlwlphnkq'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'noreply@example.com'
 
 # Frontend URL
-FRONTEND_URL = 'https://reacte-commerceproject.netlify.app/'
+
+
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
