@@ -1,125 +1,155 @@
-# users/serializers.py
+# # users/serializers.py
 
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Address
+# from django.contrib.auth import get_user_model
+# from rest_framework import serializers
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+# from .models import Address
 
-User = get_user_model()
-
-
-# -----------------------------------
-# User Serializer (Profile / Read)
-# -----------------------------------
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'email', 'first_name', 'last_name']
-
-
-# -----------------------------------
-# User Registration Serializer
-# -----------------------------------
-class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=6)
-
-    class Meta:
-        model = User
-        fields = ['id', 'email', 'password', 'first_name', 'last_name']
-        extra_kwargs = {
-            'first_name': {'required': False},
-            'last_name': {'required': False},
-        }
-
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError(
-                "A user with this email already exists."
-            )
-        return value
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['email'],  # email used as username
-            email=validated_data['email'],
-            password=validated_data['password'],
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
-            is_active=True
-        )
-
-        # Generate JWT tokens immediately
-        refresh = RefreshToken.for_user(user)
-        self.token_data = {
-            "refresh": str(refresh),
-            "access": str(refresh.access_token)
-        }
-
-        return user
+# User = get_user_model()
 
 
 # # -----------------------------------
-# # Email Login Serializer (JWT) ✅ FIXED SAFELY
+# # User Serializer (Profile / Read)
 # # -----------------------------------
-# class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     username_field = "email"
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'email', 'first_name', 'last_name']
 
-#     def validate(self, attrs):
-#         """
-#         Map email -> username so Django authentication works
-#         without changing your User model or views.
-#         """
 
-#         # Convert email into username internally
-#         attrs["username"] = attrs.get("email")
+# # -----------------------------------
+# # User Registration Serializer
+# # -----------------------------------
+# class RegisterSerializer(serializers.ModelSerializer):
+#     password = serializers.CharField(write_only=True, min_length=6)
 
-#         # Run normal SimpleJWT validation
-#         data = super().validate(attrs)
-
-#         # Attach user info to response
-#         user = self.user
-#         data["user"] = {
-#             "id": user.id,
-#             "email": user.email,
-#             "first_name": user.first_name,
-#             "last_name": user.last_name,
+#     class Meta:
+#         model = User
+#         fields = ['id', 'email', 'password', 'first_name', 'last_name']
+#         extra_kwargs = {
+#             'first_name': {'required': False},
+#             'last_name': {'required': False},
 #         }
 
-#         return data
+#     def validate_email(self, value):
+#         if User.objects.filter(email=value).exists():
+#             raise serializers.ValidationError(
+#                 "A user with this email already exists."
+#             )
+#         return value
+
+#     def create(self, validated_data):
+#         user = User.objects.create_user(
+#             username=validated_data['email'],  # email used as username
+#             email=validated_data['email'],
+#             password=validated_data['password'],
+#             first_name=validated_data.get('first_name', ''),
+#             last_name=validated_data.get('last_name', ''),
+#             is_active=True
+#         )
+
+#         # Generate JWT tokens immediately
+#         refresh = RefreshToken.for_user(user)
+#         self.token_data = {
+#             "refresh": str(refresh),
+#             "access": str(refresh.access_token)
+#         }
+
+#         return user
 
 
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+# # # -----------------------------------
+# # # Email Login Serializer (JWT) ✅ FIXED SAFELY
+# # # -----------------------------------
+# # class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+# #     username_field = "email"
+
+# #     def validate(self, attrs):
+# #         """
+# #         Map email -> username so Django authentication works
+# #         without changing your User model or views.
+# #         """
+
+# #         # Convert email into username internally
+# #         attrs["username"] = attrs.get("email")
+
+# #         # Run normal SimpleJWT validation
+# #         data = super().validate(attrs)
+
+# #         # Attach user info to response
+# #         user = self.user
+# #         data["user"] = {
+# #             "id": user.id,
+# #             "email": user.email,
+# #             "first_name": user.first_name,
+# #             "last_name": user.last_name,
+# #         }
+
+# #         return data
+
+
+# from django.contrib.auth import authenticate
+# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+# # class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+# #     username_field = "email"
+
+# #     def validate(self, attrs):
+# #         email = attrs.get("email")
+# #         password = attrs.get("password")
+
+# #         # Authenticate manually using username=email
+# #         user = authenticate(
+# #             username=email,
+# #             password=password
+# #         )
+
+# #         if user is None:
+# #             raise serializers.ValidationError(
+# #                 "Invalid email or password"
+# #             )
+
+# #         if not user.is_active:
+# #             raise serializers.ValidationError(
+# #                 "User account is disabled"
+# #             )
+
+# #         # Generate tokens using parent logic
+# #         refresh = self.get_token(user)
+
+# #         data = {
+# #             "refresh": str(refresh),
+# #             "access": str(refresh.access_token),
+# #             "user": {
+# #                 "id": user.id,
+# #                 "email": user.email,
+# #                 "first_name": user.first_name,
+# #                 "last_name": user.last_name,
+# #             }
+# #         }
+
+# #         return data
+
 
 
 # class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     username_field = "email"
-
 #     def validate(self, attrs):
 #         email = attrs.get("email")
 #         password = attrs.get("password")
 
-#         # Authenticate manually using username=email
-#         user = authenticate(
-#             username=email,
-#             password=password
-#         )
+#         user = authenticate(username=email, password=password)
 
 #         if user is None:
-#             raise serializers.ValidationError(
-#                 "Invalid email or password"
-#             )
+#             raise serializers.ValidationError("Invalid email or password")
 
 #         if not user.is_active:
-#             raise serializers.ValidationError(
-#                 "User account is disabled"
-#             )
+#             raise serializers.ValidationError("User account is disabled")
 
-#         # Generate tokens using parent logic
 #         refresh = self.get_token(user)
 
-#         data = {
+#         return {
 #             "refresh": str(refresh),
 #             "access": str(refresh.access_token),
 #             "user": {
@@ -130,24 +160,67 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 #             }
 #         }
 
-#         return data
+# # -----------------------------------
+# # Address Serializer
+# # -----------------------------------
+# class AddressSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Address
+#         fields = [
+#             'id',
+#             'user',
+#             'address_line1',
+#             'address_line2',
+#             'city',
+#             'state',
+#             'country',
+#             'postal_code',
+#             'is_default'
+#         ]
+#         read_only_fields = ['user']
 
 
 
-class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+
+
+
+
+
+
+
+
+
+
+
+
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class EmailTokenObtainPairSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
     def validate(self, attrs):
         email = attrs.get("email")
         password = attrs.get("password")
 
-        user = authenticate(username=email, password=password)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid email or password")
 
-        if user is None:
+        if not user.check_password(password):
             raise serializers.ValidationError("Invalid email or password")
 
         if not user.is_active:
             raise serializers.ValidationError("User account is disabled")
 
-        refresh = self.get_token(user)
+        refresh = RefreshToken.for_user(user)
 
         return {
             "refresh": str(refresh),
@@ -160,21 +233,4 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
             }
         }
 
-# -----------------------------------
-# Address Serializer
-# -----------------------------------
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = [
-            'id',
-            'user',
-            'address_line1',
-            'address_line2',
-            'city',
-            'state',
-            'country',
-            'postal_code',
-            'is_default'
-        ]
-        read_only_fields = ['user']
+
