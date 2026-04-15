@@ -93,63 +93,33 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
-# class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     username_field = "email"
-
-#     def validate(self, attrs):
-#         email = attrs.get("email")
-#         password = attrs.get("password")
-
-#         # Authenticate manually using username=email
-#         user = authenticate(
-#             username=email,
-#             password=password
-#         )
-
-#         if user is None:
-#             raise serializers.ValidationError(
-#                 "Invalid email or password"
-#             )
-
-#         if not user.is_active:
-#             raise serializers.ValidationError(
-#                 "User account is disabled"
-#             )
-
-#         # Generate tokens using parent logic
-#         refresh = self.get_token(user)
-
-#         data = {
-#             "refresh": str(refresh),
-#             "access": str(refresh.access_token),
-#             "user": {
-#                 "id": user.id,
-#                 "email": user.email,
-#                 "first_name": user.first_name,
-#                 "last_name": user.last_name,
-#             }
-#         }
-
-#         return data
-
-
-
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = "email"
+
     def validate(self, attrs):
         email = attrs.get("email")
         password = attrs.get("password")
 
-        user = authenticate(username=email, password=password)
+        # Authenticate manually using username=email
+        user = authenticate(
+            username=email,
+            password=password
+        )
 
         if user is None:
-            raise serializers.ValidationError("Invalid email or password")
+            raise serializers.ValidationError(
+                "Invalid email or password"
+            )
 
         if not user.is_active:
-            raise serializers.ValidationError("User account is disabled")
+            raise serializers.ValidationError(
+                "User account is disabled"
+            )
 
+        # Generate tokens using parent logic
         refresh = self.get_token(user)
 
-        return {
+        data = {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
             "user": {
@@ -159,6 +129,36 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
                 "last_name": user.last_name,
             }
         }
+
+        return data
+
+
+
+# class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     def validate(self, attrs):
+#         email = attrs.get("email")
+#         password = attrs.get("password")
+
+#         user = authenticate(username=email, password=password)
+
+#         if user is None:
+#             raise serializers.ValidationError("Invalid email or password")
+
+#         if not user.is_active:
+#             raise serializers.ValidationError("User account is disabled")
+
+#         refresh = self.get_token(user)
+
+#         return {
+#             "refresh": str(refresh),
+#             "access": str(refresh.access_token),
+#             "user": {
+#                 "id": user.id,
+#                 "email": user.email,
+#                 "first_name": user.first_name,
+#                 "last_name": user.last_name,
+#             }
+#         }
 
 # -----------------------------------
 # Address Serializer
@@ -178,59 +178,5 @@ class AddressSerializer(serializers.ModelSerializer):
             'is_default'
         ]
         read_only_fields = ['user']
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from rest_framework import serializers
-# from django.contrib.auth import get_user_model
-
-# User = get_user_model()
-
-
-# class EmailTokenObtainPairSerializer(serializers.Serializer):
-#     email = serializers.EmailField()
-#     password = serializers.CharField()
-
-#     def validate(self, attrs):
-#         email = attrs.get("email")
-#         password = attrs.get("password")
-
-#         try:
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             raise serializers.ValidationError("Invalid email or password")
-
-#         if not user.check_password(password):
-#             raise serializers.ValidationError("Invalid email or password")
-
-#         if not user.is_active:
-#             raise serializers.ValidationError("User account is disabled")
-
-#         refresh = RefreshToken.for_user(user)
-
-#         return {
-#             "refresh": str(refresh),
-#             "access": str(refresh.access_token),
-#             "user": {
-#                 "id": user.id,
-#                 "email": user.email,
-#                 "first_name": user.first_name,
-#                 "last_name": user.last_name,
-#             }
-#         }
 
 
