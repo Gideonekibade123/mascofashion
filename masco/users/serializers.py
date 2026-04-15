@@ -159,7 +159,7 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 #                 "last_name": user.last_name,
 #             }
 #         }
-
+#  updating
 # -----------------------------------
 # Address Serializer
 # -----------------------------------
