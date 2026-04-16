@@ -16,7 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.getenv("SECRET_KEY")
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
 DEBUG = False
-ALLOWED_HOSTS = ['mascofashion.onrender.com',]
+# ALLOWED_HOSTS = ['mascofashion.onrender.com',]
+ALLOWED_HOSTS = ["mascofashion.onrender.com", ".onrender.com", "localhost", "127.0.0.1"]
 
 
 # Paystack credentials
@@ -135,7 +136,7 @@ EMAIL_HOST_USER = 'gekibade@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'EMAIL_HOST_USER'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Frontend URL
 
