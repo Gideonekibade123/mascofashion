@@ -144,11 +144,17 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # CORS
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+#     "https://reacte-commerceproject.netlify.app",
+#     ]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
     "https://reacte-commerceproject.netlify.app",
-    ]
+    "https://mascofashion-store.netlify.app",  # ← add this
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
