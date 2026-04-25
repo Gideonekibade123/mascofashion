@@ -23,7 +23,13 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-admin.site.register(ProductImage)
+# admin.site.register(ProductImage)
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ('product', 'image_url')
+    search_fields = ('product__name',)
+
+
 admin.site.register(Review)
 admin.site.register(Cart)
 admin.site.register(Enquiry)
