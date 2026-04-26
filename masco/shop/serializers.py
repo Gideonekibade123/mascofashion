@@ -31,7 +31,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = [
             'id',
-            'image',
+            # 'image',
+            'image_url',
         ]
 
 
