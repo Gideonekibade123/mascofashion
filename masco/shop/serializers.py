@@ -126,20 +126,7 @@ class EnquirySerializer(serializers.ModelSerializer):
             'created_at',
         ]
 
-# # ----------------------------
-# # Orders
-# # ----------------------------
-# class OrderSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Order
-#         fields = "__all__"
-#         read_only_fields = ['user', 'status', 'created_at']
 
-#     def create(self, validated_data):
-#         validated_data['user'] = self.context['request'].user
-#         return super().create(validated_data)
-
-# from .models import Order
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:

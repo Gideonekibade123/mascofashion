@@ -59,34 +59,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# # -----------------------------------
-# # Email Login Serializer (JWT) ✅ FIXED SAFELY
-# # -----------------------------------
-# class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     username_field = "email"
-
-#     def validate(self, attrs):
-#         """
-#         Map email -> username so Django authentication works
-#         without changing your User model or views.
-#         """
-
-#         # Convert email into username internally
-#         attrs["username"] = attrs.get("email")
-
-#         # Run normal SimpleJWT validation
-#         data = super().validate(attrs)
-
-#         # Attach user info to response
-#         user = self.user
-#         data["user"] = {
-#             "id": user.id,
-#             "email": user.email,
-#             "first_name": user.first_name,
-#             "last_name": user.last_name,
-#         }
-
-#         return data
 
 
 from django.contrib.auth import authenticate
@@ -132,35 +104,6 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
 
-
-
-# class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     def validate(self, attrs):
-#         email = attrs.get("email")
-#         password = attrs.get("password")
-
-#         user = authenticate(username=email, password=password)
-
-#         if user is None:
-#             raise serializers.ValidationError("Invalid email or password")
-
-#         if not user.is_active:
-#             raise serializers.ValidationError("User account is disabled")
-
-#         refresh = self.get_token(user)
-
-#         return {
-#             "refresh": str(refresh),
-#             "access": str(refresh.access_token),
-#             "user": {
-#                 "id": user.id,
-#                 "email": user.email,
-#                 "first_name": user.first_name,
-#                 "last_name": user.last_name,
-#             }
-#         }
-#  updating
-# -----------------------------------
 # Address Serializer
 # -----------------------------------
 class AddressSerializer(serializers.ModelSerializer):

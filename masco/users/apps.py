@@ -2,7 +2,11 @@
 
 
 # class UsersConfig(AppConfig):
-#     name = 'users'
+#     default_auto_field = 'django.db.models.BigAutoField'
+#     name = 'masco.users'
+
+#     def ready(self):
+#         import masco.users.signals
 
 
 
@@ -14,4 +18,4 @@ class UsersConfig(AppConfig):
     name = 'masco.users'
 
     def ready(self):
-        import masco.users.signals
+        import masco.users.signals  # ✅ loads signal on startup

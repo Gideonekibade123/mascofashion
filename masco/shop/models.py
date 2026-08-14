@@ -102,13 +102,22 @@ class Review(models.Model):
 
 
 # ============================
-# Cart
+# Cart older version
 # ============================
+# class Cart(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     quantity = models.PositiveIntegerField(default=1)
+#     created_at = models.DateTimeField(auto_now_add=True)
+# Fix — store what the user actually selected net to the product in the cart, so that if the product details change later, we still know what the user originally chose.
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    selected_size = models.CharField(max_length=5, blank=True)    # ✅
+    selected_color = models.CharField(max_length=20, blank=True)  # ✅
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name} for {self.user}"
